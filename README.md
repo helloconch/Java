@@ -16,3 +16,7 @@ b.print()<br/>
 b.say()<br/>
 首先进入B的构造，在进入A的构造，在调用B中的say<br/>
 
+4.A a=new A();<br/>
+a.say()<br/>
+首先进入B的构造，在进入A的构造，在调用B中的say<br/>
+
