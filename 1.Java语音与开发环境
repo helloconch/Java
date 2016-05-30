@@ -8,5 +8,9 @@ javac -d destdir srcFile
 java Java类名
 如: java xxx [省掉.class后缀]
 
+3.java源文件的命名规则
+一个Java源文件可以包含多个类定义，但最多只能包含一个public类定义；
+如果Java源文件里包含public类定义，则该源文件的文件名必须与这个public类类名相同。
+
 
 
