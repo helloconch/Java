@@ -1,0 +1,4 @@
+1.编译Java程序,生成.class文件
+javac -d destdir srcFile
+如:javac -d . ./Desktop/x/xxx.java 将生成在当前目录。
+如:javac ./Desktop/x/xxx.java 将生成在与xxx.java所在的同目录下。
