@@ -2,3 +2,11 @@
 javac -d destdir srcFile
 如:javac -d . ./Desktop/x/xxx.java 将生成在当前目录。
 如:javac ./Desktop/x/xxx.java 将生成在与xxx.java所在的同目录下。
+
+2.运行java程序
+运行Java程序使用java命令，启动命令行窗口，运行.class所在的位置
+java Java类名
+如: java xxx [省掉.class后缀]
+
+
+
