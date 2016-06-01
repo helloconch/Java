@@ -78,4 +78,22 @@ Arrays.sort(type[]a,int fromIndx ,int toIndex);
 只是将fromIndex到toIndex索引的元素进行排序
 Arrays.toString(type[]a);
 将一个数组转化成一个字符串，多个元素使用英文,和空格隔开。
-
+//////java8增强了Arrays类的功能，为Arrays类增加一些工具方法，这些工具方法充分利用
+CPU并行的能力来提高设置、排序的性能。
+Arrays.parallelPrefix(xxx[]array,XxxBinaryOperator op);
+该方法使用op参数指定的计算公式计算得到的结果作为新的元素。op计算公式包括left/right两个形参，其中left代表数组中前一个
+索引出的元素，right代表数组中当前索引处的元素，当计算第一个新新数组元素时，left值默认为1
+Arrays.parallelPrefix(xxx[]array,int fromIndex,int toIndex,XxxBinaryOperator op);
+Arrays.setAll(xxx[]array,IntToXxxxFunction generator);
+该方法使用指定的生成器（generator）为所有数组元素设置值，该生成器控制数组元素的值的生成算法。
+Arrays.parallelSetAll(xxx[]array,IntToXxxxFunction generator);
+与上一个方法类似，只是该方法增加了并行能力，可以利用多CPU并行来提高性能。
+Arrays.parallelSort(xxxx[]a);
+该方法与Arrays.sort()类似，只是增加了并行能力，利用多CPU并行提高性能。
+Arrays.parallelSort(xxxx[]a,int formIndex,int toIndex);
+Spliterator.OfXxx spliterator(xxx[]array);
+该数组的所有元素转换成对应的Spliterator对象。
+Spliterator.OfXxx spliterator(xxx[]array，int startInclusive,int endExclusive);
+XxxStream stream(xxx[] array);
+该方法将数组转换成Stream，Stream是Java8新增的流失编程API
+XxxStream stream(xxx[] array，int startInclusive,int endExclusive);
