@@ -1,1 +1,18 @@
+1.使用switch语句时，需要注意两个地方：第一是switch语句后的expression表达式的数据类型
+只能是byte、short、char、int 四种整数类型，String(Java7)和枚举类型；第二个如果省略case后代码块的break,将引入一个陷进。
 
+2.for
+for (int j = 0; j < args.length; j++) {
+			
+		}
+		
+for(;;){
+    syso("无限循环");
+}
+int count=0;
+for(;count<10;){
+   syso("data");
+   count++;
+}
+
+3.Java提供continue和break来控制循环结构，除此之外，return可以结束整个方法，当然也就结束了一次循环。
