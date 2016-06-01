@@ -42,3 +42,16 @@ oo:
 			}
 			System.out.println("i:" + i);
 		}
+
+4.数组--引用类型
+一旦数组的初始化完成，数组在内存中所占的空间将被固定下来，因此数组的长度依然不变。即使把某个数组元素的数据清空，但它所占
+的空间依然被保留，依然属于该数组，数组的长度依然不变。
+数组的初始化
+静态初始化 type[] arrayName=new type[]{element1,element2,element3};
+动态初始化 type[] arrayName=new type[length];
+
+5.多维数组
+type[][]arrName=new type[length][];
+这个二维数组实际上完全可以当成一维数组，使用new type[length]初始化一维数组后，相当于定义了length个type类型的变量。
+类似的，使用new type[length][]初始化这个数组后，相当于定义了length个type[]类型的变量，当然这些type[]类型的变量都是数组类型，
+因此必须再次初始化这些数组。
