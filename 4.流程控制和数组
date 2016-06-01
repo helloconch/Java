@@ -56,5 +56,26 @@ type[][]arrName=new type[length][];
 类似的，使用new type[length][]初始化这个数组后，相当于定义了length个type[]类型的变量，当然这些type[]类型的变量都是数组类型，
 因此必须再次初始化这些数组。
 
-6.Java8增强的工具类
+6.Java8增强的工具类Arrays
+Arrays.binarySearch(type[] a,type key);
+使用二分法查询key元素值在a数组中出现的索引；如果a数组不包含key元素值，则返回负数。
+调用该方法要求数组中元素已经按升序排列，这样才能得到正确结果。
+Arrays.binarySearch(type[]a,int fromIndex,int toIndex,type key);
+只搜索a数组中fromIndex到toIndex索引的元素。调用该方法要求数组中元素已经按照升序排列
+Arrays.copyOf(type[]original,int length);
+这个方法将会把original数组复制成一个新数组，其中length是新数组的长度。
+Arrays.copyOfRange(type[]original,int from,int to);
+只复制original数组from索引到to索引的元素。
+Arrays.equals(type[]a,type[]b);
+如果数组a和b长度相等，并且a数组和b数组元素也一一相同，该方法返回true.
+Arrays.fill(type[]a,type val);
+该方法会把a数组的所有元素都赋值为val
+Arrays.fill(type[]a,int formIndex,int toIndex,type val);
+只是将a数组的fromIndex到toIndex索引的数组元素赋值为val
+Arrays.sort(type[]a);
+该方法对a数组元素进行排序
+Arrays.sort(type[]a,int fromIndx ,int toIndex);
+只是将fromIndex到toIndex索引的元素进行排序
+Arrays.toString(type[]a);
+将一个数组转化成一个字符串，多个元素使用英文,和空格隔开。
 
