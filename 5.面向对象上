@@ -39,3 +39,63 @@ java.sql:Java进行JDBC数据库编程相关类、接口
 java.awt:包含抽象窗口工具集（abstract window toolkits）的相关类和接口，主要用于构建图形
 用户界面（GUI）程序。
 java.swing:包含Swing图形用户界面编程的相关类、接口，这些类可以用于构建与平台无关的GUI程序。
+
+
+5.多态
+public class BaseClass {
+	public int book = 6;
+
+	public void base() {
+		System.out.println("parent base()");
+	}
+
+	public void test() {
+		System.out.println("parent test()");
+	}
+}
+
+public class SubClass extends BaseClass {
+	// 重新定义一个book实例变量隐藏父类book变量
+	public String book = "书籍";
+
+	public void test() {
+		System.out.println("子类 test()");
+	}
+
+	public void sub() {
+		System.out.println("子类普通方法");
+	}
+
+	public static void main(String[] args) {
+		// 编译类型和运行类型一样，不存在多态
+		BaseClass bc = new BaseClass();
+		System.out.println(bc.book);
+		// 下面两次调用BaseClass里方法
+		bc.base();
+		bc.test();
+
+		// 编译类型和运行类型一样，不存在多态
+
+		SubClass sc = new SubClass();
+		System.out.println(sc.book);
+		// 下面调用父类BaseClass里方法
+		sc.base();
+		// 下面调用当前类里方法
+		sc.test();
+
+		// 编译类型和运行类型不一样，多态发生
+		BaseClass ployphics = new SubClass();
+		// 输出6表明访问父类对象实例变量
+		System.out.println(ployphics.book);
+		// 下面调用父类BaseClass里方法
+		ployphics.base();
+		// 下面调用当前类里方法
+		ployphics.test();
+		// 编译类型为BaseClass例没有sub()方法
+		// ployphics.sub();
+
+	}
+
+}
+
+
