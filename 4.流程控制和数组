@@ -138,6 +138,7 @@ public class Num2Rmb {
 		for (int i = 0; i < numLen; i++) {
 			//把char型数字转换成int型数字，因为它们的ASCII码值恰好相差48
 			//因此把char型数字减去48得到int型数字，例如'4'被转换成4
+			//'a'97 'A'65
 			int num = numStr.charAt(i) - 48;
 			if (i != numLen - 1 && num != 0) {
 				result += hanArr[num] + unitArr[numLen - 2 - i];
