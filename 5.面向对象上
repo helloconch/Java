@@ -25,3 +25,17 @@ protected（子类访问权限）：如果一个成员（包括成员变量、�
 通常情况下，如果使用protected来修饰一个方法，通常是希望子类重写这个方法。
 
 public（公共访问权限）：这是一个最宽松的访问控制级别。
+
+
+4.Java常用包
+Java核心类都在Java包以及其子包下，Java扩展的许多类都放在Javax包及其子包下。
+java.lang:这个包下包含Java语言核心类，如String 、Math、String和Thread 等。
+使用这个包下类无需要import语句导入，系统会自动导入这个包下的所有类。
+java.util:Java大量工具类、接口和集合框架、接口。例如Arrays、List、Set
+java.net:Java网络编程相关的类和接口。
+java.io:Java输入、输出编程相关的类、接口。
+java.text:Java格式化相关的类。
+java.sql:Java进行JDBC数据库编程相关类、接口
+java.awt:包含抽象窗口工具集（abstract window toolkits）的相关类和接口，主要用于构建图形
+用户界面（GUI）程序。
+java.swing:包含Swing图形用户界面编程的相关类、接口，这些类可以用于构建与平台无关的GUI程序。
