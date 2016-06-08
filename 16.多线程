@@ -11,3 +11,59 @@ c)多个进程可以在单个处理器上并发进行，多个进程之间不会
 多线程扩展了多进程的概念，使得同一个进程可以同时并发处理多个任务。线程 也被称作轻量级进程，线程是进程的执行单元。就像进程在操作系统的地位
 一样，线程在程序中是独立的，并发的执行流。当进程被初始化后，主线程就被创建了。对于绝大多数的应用程序来说，通常仅要求有一个主线程，但也可以
 在该进程内创建多条顺序执行流，这些顺序执行流就是线程，每个线程也是互相独立的。
+
+2.多线程编程优点
+a)进程之间不能共享内存，但线程之间共享内存非常容易。
+b)系统创建进程时需要为该进程重新分配系统资源，但创建线程则代价小的多，因此使用多线程来实现多任务并发比多进程的效率高。
+c)Java语言内置了多线程功能支持，而不是单纯地作为底层操作系统的调度方式，从而简化Java多线程的编程。
+
+3.线程的创建和启动
+a)继承Thread类创建线程类【使用继承Thread类方法来创建线程类时，多个线程之间无法共享线程类的实例变量。】
+Thread.currentThread():currentThread()是Thread类的静态方法，该方法总是返回当前正在执行的线程对象。
+getName()：该方法是Thread类的实例方法，该方法返回调用该方法的线程名字。
+b)实现Runnable接口创建线程类【采用Runnable接口的方式创建的多个线程可以共享线程类的实例变量这是因为在这种方式下，
+程序所创建的Runnable对象只是线程的target，而多个线程可以共享一个target，所以多个线程可以共享同一个线程类的实例变量】
+c)使用Callable和Future创建线程
+Java5开始，Java提供Callable接口，该接口怎么看像是Runnable接口的增强版，Callable接口提供了一个call（）方法可以作为线程执行体，
+但call()方法比run()方法功能更强大。
+call()方法可以有返回值
+call()方法可以声明抛出异常。
+public class Thread1 implements Callable<Integer> {
+
+	@Override
+	public Integer call() throws Exception {
+
+		int i = 0;
+		for (; i < 100; i++) {
+			System.out.println(Thread.currentThread().getName() + " 的循环变量i:"
+					+ i);
+		}
+		return i;
+	}
+
+}
+public static void main(String[] args) {
+		Thread1 t1 = new Thread1();
+		FutureTask<Integer> ft = new FutureTask<Integer>(t1);
+
+		for (int i = 0; i < 100; i++) {
+			System.out.println(Thread.currentThread().getName() + " 的循环变量i:"
+					+ i);
+
+			if (i == 20) {
+				new Thread(ft, "有返回的线程").start();
+			}
+		}
+
+		try {
+			System.out.println("获取子线程的返回值: " + ft.get());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+d)
+
