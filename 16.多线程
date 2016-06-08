@@ -145,6 +145,66 @@ NORM_PRIORITY:5
 
 
 8.线程同步
+a)同步代码块
+//使用account作为同步监视器，任何线程进入下面同步代码块之前
+//必须先获得对account账号的锁定，其他线程池无法获得锁，也就无法修改它
+//这种做法符合“加锁-修改-释放锁”的逻辑
+run(){
+synchronized(account){
+}
+}
+b)同步方法
+public synchronized void draw(double drawAccount){
+}
+
+
+9.释放同步监视器的锁定
+如下几种情况释放对同步监视器的锁定
+a)当前线程的同步方法、同步代码块执行结束，当前线程即可释放不同监视器
+b)当前线程在同步代码块、同步方法中遇到break、return终止了该代码块，该方法的继续执行，当前线程将释放同步监视器。
+c)当前线程在同步代码块、同步方法中出现了未处理的Error或Exception，导致了该代码块，该方法异常结束时，当前线程将会释放同步监视器。
+d)当前线程在同步代码块、同步方法中，程序执行了同步监视器对象的wait()方法，则当前线程暂停，并释放同步监视器。
+以下情况，线程不会释放同步监视器
+a)当前线程在同步代码块、同步方法时候，程序调用Thread.sleep() Thread.yield()方法来暂停当前线程的执行，当前线程不会释放同步监视器。
+b)线程执行同步代码块时，其它线程调用了该线程的suspend()方法，将该线程挂起，该线程不会释放同步监视器。
+
+10.同步锁（Lock）
+Java5开始，Java提供一个功能更强大的线程同步机制，通过显示的定义同步锁对象来实现同步，在这种机制下，同步锁由Lock对象充当。
+Lock提供比同步方法和同步代码块更广泛的锁定操作，Lock允许实现更灵活地结构，可以具有差别很大的属性，并且支持多个相关的Condition对象。
+某些锁可以允许对共享资源的并发访问，如ReadWriteLock(读写锁)，Lock  。并为Lock提供了ReentrantLock(可重入锁)实现类，为ReadWriteLock提供了
+ReentrantReadWriteLock实现类。
+Java8新增了新型的StampedLock类，在大多数场景中它可以替代传统的ReentrantReadWriteLock。ReentrantReadWriteLock为读写操作提供了三种锁
+模式:Writing、ReadingOptimistic、Reading.
+
+class X {
+	// 定义锁对象
+	private final ReentrantLock lock = new ReentrantLock();
+
+	// 定义需要保证线程安全的方法
+	public void m() {
+		// 加锁
+		lock.lock();
+		// 需要保证线程安全的代码
+		try {
+			// method body
+		} finally {
+			lock.unlock();
+		}
+
+	}
+}
+
+
+
+11.死锁
+当两个线程相互等待对方释放不同监视器时就会发生死锁。一旦出现死锁，整个程序既不会发生任何异常，也不会给出任何提示，只是所有线程
+处于阻塞状态，无法继续。
+
+
+12.线程通信
+
+
+
 
 
 
