@@ -656,5 +656,78 @@ public class ThreadPoolTest {
 
 
 
+15.ForkJoinPool为多核CPU做准备
 
+16.线程相关类
+a)ThreadLocal类（Thread Local Variable）
+它代表一个线程局部变量，通过把数据放在ThreadLocal中就可以让每一个线程创建一个该变量的副本，从而避免并发访问的线程安全问题。
+package threadlocal;
+
+public class Account {
+	// 定义一个ThreadLocal类型变量，该变量将是一个线程局部变量,每个线程都会保留该变量的副本
+	private ThreadLocal<String> name = new ThreadLocal<String>();
+
+	public Account(String str) {
+		this.name.set(str);
+		System.out.println("---" + this.name.get());
+	}
+
+	public String getName() {
+		return name.get();
+	}
+
+	public void setName(String str) {
+		this.name.set(str);
+	}
+}
+package threadlocal;
+
+public class MyTest extends Thread {
+	// 定义一个Account类型的成员变量
+	private Account account;
+
+	public MyTest(Account account, String name) {
+		super(name);
+		this.account = account;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 10; i++) {
+
+			if (i == 6) {
+				account.setName(getName());
+			}
+
+			System.out.println(account.getName() + " 账户i值：" + i);
+		}
+	}
+
+}
+package threadlocal;
+
+public class ThreadLocalTest {
+	public static void main(String[] args) {
+		Account at = new Account("初始名");
+
+		new MyTest(at, "线程甲").start();
+		new MyTest(at, "线程乙").start();
+	}
+}
+
+b)包装线程不安全的集合
+java集合时所讲的ArrayList、LinkedList、HashSet、TreeSet、HashMap、TreeMap等都是线程不安全的，当多个并发线程向这些集合存取元素事，就
+可能破坏这些集合的数据完整性。
+通过Collecitons提供的synchronizedCollection()、synchronizedList()、synchronizedMap()、synchronizedSet()、synchronizedSortedMap()、
+synchronizedSortedSet()
+
+c)线程安全的集合类
+java5开始，在java.util.concurrent包下提供大量支持高效并发访问的集合接口和实现类。
+c1)以Concurrent开头的集合类，如ConcurrentHashMap等等
+c2)以CopyOnWrite开头的集合类，如CopyOnWriteArrayList等
+当多个线程共享访问一个公共集合时，ConcurrentLinkedQueue是一个恰当的选择，ConcurrentLinkedQueue不允许使用null元素，ConcurrentLinkedQueue
+实现了多线程的高效访问，多个线程访问ConcurrentLinkedQueue集合无须等待。
+在默认情况下ConcurrentHashMap支持16个线程并发写入，当有超过16个线程并发向该Map写入数据时，可能有一些线程需要等待。
+CopyOnWriteArrayList执行写入操作时需要频繁地复制数组，性能比较差，但由于读操作与写操作不是同一个数组，而且读操作也不需要加锁，
+因此读操作就很快，很安全。由此可见，CopyOnWriteArrayList适合用在读取操作远远大于写入操作的场景中，例如缓存等。
 
