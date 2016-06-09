@@ -489,6 +489,97 @@ public class Run {
 }
 
 
+c.适用阻塞队列（BlockingQueue）控制线程通信
+java5提供了一个BlockingQueue接口，虽然BlockingQueue也是Queue的子接口，但它的主要用途并不是作为容器，而是作为线程同步的工具。
+BlockingQueue具有一个特征，当生产者线程试图向BlockingQueue中放入元素时，如果该队列已满，则该线程被阻塞；当消费者试图从BlockingQueue
+中取出元素时，如果该队列已空，则该线程被阻塞。
+BlockingQueue提供如下两个支持阻塞的方法
+put(E e)：尝试把E元素放入BlockingQueue中，如果该队列元素已满，则阻塞该线程。
+take():尝试从BlockingQueue的头部取出元素，如果该队列的元素已空，则阻塞该线程。
+BlockingQueue继承了Queue接口，当然也可以使用Queue接口中的方法。
+在队列尾部插入元素。包括add(E e)、offer(E e)、put(E e)方法，该队列已满，这三个方法分别抛出异常，返回false，阻塞队列。
+在队列头部删除并返回删除的元素。包括remove()、poll()、take()方法。当队列已空时，这三个方法分别抛出异常，返回false,阻塞队列。
+在队列头部取出但不删除元素，包括element()和peek()方法，当队列已空时，这2个方法分别抛出异常，返回false
+package blockingqueue;
+
+import java.util.concurrent.BlockingQueue;
+
+public class Producer extends Thread {
+	private BlockingQueue<String> bq;
+
+	public Producer(BlockingQueue<String> bq) {
+		super();
+		this.bq = bq;
+	}
+
+	@Override
+	public void run() {
+		String[] strArr = new String[] { "Java", "Struts", "Spring" };
+
+		for (int i = 0; i < 999999999; i++) {
+			System.out.println(getName() + "生产者准备生产集合元素!");
+
+			try {
+				Thread.sleep(200);
+				// 尝试放入元素，如果队列已满，则线程被阻塞
+				bq.put(strArr[i % 3]);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(getName() + "生产完成:" + bq);
+
+		}
+	}
+}
+package blockingqueue;
+
+import java.util.concurrent.BlockingQueue;
+
+public class Consumer extends Thread {
+	private BlockingQueue<String> bq;
+
+	public Consumer(BlockingQueue<String> bq) {
+		super();
+		this.bq = bq;
+	}
+
+	@Override
+	public void run() {
+
+		while (true) {
+			System.out.println(getName() + "消费者准备消费集合元素!");
+
+			try {
+				Thread.sleep(200);
+				// 尝试取出元素，如果队列已空，则线程被阻塞
+				bq.take();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(getName() + "消费完成:" + bq);
+		}
+	}
+}
+package blockingqueue;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+public class Run {
+	public static void main(String[] args) {
+		// 创建一个容量为1的BlockingQueue
+		BlockingQueue<String> bq = new ArrayBlockingQueue<String>(1);
+		// 启动3个生产者线程
+		new Producer(bq).start();
+		new Producer(bq).start();
+		new Producer(bq).start();
+		// 启动一个消费者线程
+		new Consumer(bq).start();
+	}
+
+}
+
+
 
 
 
