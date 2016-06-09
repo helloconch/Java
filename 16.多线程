@@ -214,8 +214,132 @@ wait()：导致当前线程等待，直到其他线程调用该同步监视器�
 notify()：唤醒在此同步监视器上等待的单个线程。如果所有线程都在此同步监视器上等待，则会选择唤醒其中一个线程。选择是任意性的。只有当前线程放弃
 对该同步监视器的锁定后（使用wait()方法），才可以执行被唤醒的线程。
 notifyAll():唤醒在此同步监视器上等待的所有线程。只有当前线程放弃对该同步监视器的锁定后，才可以执行被唤醒的线程。
-notify():
-nofityAll():
+package money;
+
+public class Account {
+	private String accountNo;
+	private double balance;
+	// 标示账户中是否已有存款标示
+	private boolean flag = false;
+
+	public Account() {
+	}
+
+	public Account(String accountNo, double balance) {
+		super();
+		this.accountNo = accountNo;
+		this.balance = balance;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public synchronized void draw(double drawAmount) {
+		try {
+			// flag=false，表明账户中还没有人存钱进去，取钱方法阻塞
+			if (!flag) {
+				wait();
+			} else {
+				System.out.println(Thread.currentThread().getName() + "取钱："
+						+ drawAmount);
+				balance -= drawAmount;
+				System.out.println("账户余额为:" + balance);
+				flag = false;
+				// 唤醒其它线程
+				notifyAll();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void deposit(double depositAmount) {
+		try {
+			// flag=true，表示账户中已有人存钱进去，存钱方法阻塞
+			if (flag) {
+				wait();
+			} else {
+				// 执行存款操作
+				System.out.println(Thread.currentThread().getName() + "存款："
+						+ depositAmount);
+				balance += depositAmount;
+				System.out.println("账户余额为:" + balance);
+				flag = true;
+				// 唤醒其它线程
+				notifyAll();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}
+package money;
+
+public class DrawThread extends Thread {
+	private Account account;
+	private double drawAmount;
+
+	public DrawThread(String name, Account account, double drawAmount) {
+		super(name);
+		this.account = account;
+		this.drawAmount = drawAmount;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 100; i++) {
+			account.draw(drawAmount);
+		}
+	}
+
+}
+package money;
+
+public class DepositThread extends Thread {
+	private Account account;
+	private double depositAmount;
+
+	public DepositThread(String name, Account account, double depositAmount) {
+		super(name);
+		this.account = account;
+		this.depositAmount = depositAmount;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 100; i++) {
+			account.deposit(depositAmount);
+		}
+	}
+}
+package money;
+
+public class Run {
+	public static void main(String[] args) {
+		// 创建一个账户
+		Account account = new Account("11111111", 0);
+		new DrawThread("取钱者", account, 800).start();
+		new DepositThread("存款者甲", account, 800).start();
+		new DepositThread("存款者乙", account, 800).start();
+		new DepositThread("存款者丙", account, 800).start();
+	}
+
+}
+
+
 b)
 
 
