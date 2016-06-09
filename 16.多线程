@@ -340,7 +340,154 @@ public class Run {
 }
 
 
-b)
+b)使用Condition控制线程通信
+如果程序不适用synchronized关键字来保证同步，而是直接适用Lock对象来保证同步，则系统中不存在隐士的同步监视器，也就不能适用
+wait()、notify()、notifyAll()方法进行线程通信。
+当适用Lock对象来保证同步时，Java提供了一个Condition类来保持协调。
+await():
+signal():
+signalAll():
+package condition;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Account {
+	// 显示定义Lock对象
+	private final Lock lock = new ReentrantLock();
+	// 获得指定Lock对象对应的Condition
+	private final Condition cond = lock.newCondition();
+
+	private String accountNo;
+	private double balance;
+	// 标示账户中是否已有存款标示
+	private boolean flag = false;
+
+	public Account() {
+	}
+
+	public Account(String accountNo, double balance) {
+		super();
+		this.accountNo = accountNo;
+		this.balance = balance;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void draw(double drawAmount) {
+		// 加锁
+		lock.lock();
+		try {
+			// flag=false，表明账户中还没有人存钱进去，取钱方法阻塞
+			if (!flag) {
+				cond.await();
+			} else {
+				System.out.println(Thread.currentThread().getName() + "取钱："
+						+ drawAmount);
+				balance -= drawAmount;
+				System.out.println("账户余额为:" + balance);
+				flag = false;
+				// 唤醒其它线程
+				cond.signalAll();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public void deposit(double depositAmount) {
+		lock.lock();
+		try {
+			// flag=true，表示账户中已有人存钱进去，存钱方法阻塞
+			if (flag) {
+				cond.await();
+			} else {
+				// 执行存款操作
+				System.out.println(Thread.currentThread().getName() + "存款："
+						+ depositAmount);
+				balance += depositAmount;
+				System.out.println("账户余额为:" + balance);
+				flag = true;
+				// 唤醒其它线程
+				cond.signalAll();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
+
+	}
+
+}
+package condition;
+
+public class DrawThread extends Thread {
+	private Account account;
+	private double drawAmount;
+
+	public DrawThread(String name, Account account, double drawAmount) {
+		super(name);
+		this.account = account;
+		this.drawAmount = drawAmount;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 100; i++) {
+			account.draw(drawAmount);
+		}
+	}
+
+}
+package condition;
+
+public class DepositThread extends Thread {
+	private Account account;
+	private double depositAmount;
+
+	public DepositThread(String name, Account account, double depositAmount) {
+		super(name);
+		this.account = account;
+		this.depositAmount = depositAmount;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 100; i++) {
+			account.deposit(depositAmount);
+		}
+	}
+}
+package condition;
+
+public class Run {
+	public static void main(String[] args) {
+		// 创建一个账户
+		Account account = new Account("11111111", 0);
+		new DrawThread("取钱者", account, 800).start();
+		new DepositThread("存款者甲", account, 800).start();
+		new DepositThread("存款者乙", account, 800).start();
+		new DepositThread("存款者丙", account, 800).start();
+	}
+
+}
+
 
 
 
