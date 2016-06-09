@@ -607,6 +607,53 @@ public class ExHandler {
 }
 
 
+14.线程池
+系统启动一个新线程的成本是比较高的，因为它涉及与操作系统交互，在这种情形下，使用线程池可以很好的提高性能，
+尤其是当程序中需要创建大量生存期很短暂的线程时，更应该考虑使用线程池。
+s使用线程池可以有效控制系统中并发线程的数量，当系统中包含大量并发线程时，会导致系统性能剧烈下降，甚至导致JVM崩溃，而线程池的最大线程
+数参数可以控制系统中并发线程数不超过此数。
+从Java5开始，Java内建支持线程池。Java5新增了一个Executors工厂类来产生线程池，该工厂类包含如下几个静态方法来创建线程池。
+a)newCachedThreadPool():创建一个具有缓存功能的线程池，系统根据需要创建线程，这些线程将会被缓存在线程池中。
+b)newFixedThreadPool(int nThreads):创建一个可重用的，具有固定线程数的线程池。
+c)newSigleThreadExecutor():创建一个只有单线程的线程池，它相当于调用newFixedThreadPool()方法传入参数1
+d)newScheduledThreadPool(int corePoolSize):创建具有指定线程数的线程池，它可以在指定延迟后执行线程任务。corePoolSize指池中
+所保存的线程数，即使线程是空闲的也被保存在线程池内。
+e)newSigleThreadScheduledExecutor():创建只有一个线程的线程池，它可以在指定延迟后执行线程任务。
+java8
+f)ExecutorService newWorkStealingPool(int parallelism):创建持有足够的线程的线程池来支持给定的并行级别，该方法还会使用多个队列来减少竞争。
+j)ExecutorService newWorkStealingPool():该方法是前一个方法的简化版，如果当前机器有4个CPU，则目标并行级别被设置为4，也就是相当于前一个
+方法传入4作为参数。
+package threadpool;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ThreadPoolTest {
+	public static void main(String[] args) {
+
+		// 创建一个具有固定线程数的线程池
+		ExecutorService pool = Executors.newFixedThreadPool(6);
+		Runnable targert = new Runnable() {
+
+			@Override
+			public void run() {
+				for (int i = 0; i < 100; i++) {
+					System.out.println(Thread.currentThread().getName()
+							+ " 的i值为:" + i);
+				}
+
+			}
+		};
+
+		// 向线程池中提交2个线程
+		pool.submit(targert);
+		pool.submit(targert);
+		// 关闭线程池
+		pool.shutdown();
+
+	}
+}
+
 
 
 
